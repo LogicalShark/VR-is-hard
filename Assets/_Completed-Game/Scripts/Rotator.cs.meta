@@ -1,10 +1,11 @@
 fileFormatVersion: 2
 guid: b919a2dba586d422dba13dd5c6501fd2
-timeCreated: 1480430282
-licenseType: Store
+timeCreated: 1519511994
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - player: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

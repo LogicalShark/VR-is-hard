@@ -2,13 +2,24 @@
 using System.Collections;
 
 public class Rotator : MonoBehaviour {
-
+	public GameObject player;
+	public float rotateX;
+	public float rotateZ;
+	public float rotationSpeed;
+	public int triggerDist;
+	private double hasRotated;
+	void Start()
+	{
+		hasRotated = 0;
+	}
 	// Before rendering each frame..
 	void Update () 
 	{
-		// Rotate the game object that this script is attached to by 15 in the X axis,
-		// 30 in the Y axis and 45 in the Z axis, multiplied by deltaTime in order to make it per second
-		// rather than per frame.
-		transform.Rotate (new Vector3 (15, 30, 45) * Time.deltaTime);
+        float dist = Vector3.Distance(player.transform.position, transform.position);
+		if((hasRotated<=90) && (dist<triggerDist))
+		{
+			transform.Rotate (new Vector3 (rotateX/rotationSpeed, 0, rotateZ/rotationSpeed));
+			hasRotated += 90.0/rotationSpeed;
+		}
 	}
 }	
