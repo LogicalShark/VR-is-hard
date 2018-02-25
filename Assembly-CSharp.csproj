@@ -55,6 +55,9 @@
      <Compile Include="Assets\_Completed-Game\Scripts\GameManager.cs" />
      <Compile Include="Assets\_Completed-Game\Scripts\PlayerController.cs" />
      <Compile Include="Assets\_Completed-Game\Scripts\Rotator.cs" />
+     <Compile Include="Assets\_Completed-Game\Scripts\UIScript.cs" />
+     <Compile Include="Assets\ButtonScript1.cs" />
+     <Compile Include="Assets\OnLo.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
