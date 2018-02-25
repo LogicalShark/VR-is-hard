@@ -6,22 +6,27 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-	
-	// Create public variables for player speed, and for the Text UI game objects
-	public float speed;
 
-	//for the points
+	//time
+	public Text timeText;
+	public int maxTime;
+	//points
 	public Text countText;
 	private int count;
-
-	//health count
+	//health
 	public Text healthText;
+	public int maxHealth;
 	private int health;
-
 	//speeds
+	public float speed;
 	public float baseSpeed;
 	public float maxSpeed;
-
+	public float rampY;
+	public float rampZ;
+	public float jumpY;
+	//abilities
+	public float fireRate = 1.0F;
+    private float nextFire = 0.0F;
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
 
@@ -32,11 +37,11 @@ public class PlayerController : MonoBehaviour {
 		// Assign the Rigidbody component to our private rb variable
 		rb = GetComponent<Rigidbody>();
 
-		// Set the count to zero 
+		// Set count
 		count = 0;
 
-		// Set health to 2
-		health = 2;
+		// Set health
+		health = maxHealth;
 
 		// Run the SetCountText function to update the UI (see below)
 		SetCountText ();
@@ -47,6 +52,7 @@ public class PlayerController : MonoBehaviour {
 	// Each physics step..
 	void FixedUpdate ()
 	{
+
 		// Set some local float variables equal to the value of our Horizontal and Vertical Inputs
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
@@ -54,18 +60,24 @@ public class PlayerController : MonoBehaviour {
 		// Create a Vector3 variable, and assign X and Z to feature our horizontal and vertical float variables above
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 
-		// Add a physical force to our Player rigidbody using our 'movement' Vector3 above, 
+		if(Input.GetButtonDown("Fire1") && Time.time > nextFire)
+		{
+            nextFire = Time.time + fireRate;
+			rb.AddForce(new Vector3(0,jumpY,0));
+		}
+		// Add a physical force to our Player rigidbody using our 'movement' Vector3 above,
 		// multiplying it by 'speed' - our public player speed that appears in the inspector
 		if((rb.velocity.magnitude)<=maxSpeed)
 		{
 			rb.AddForce(new Vector3(0,0,baseSpeed));
 			rb.AddForce (movement * speed);
 		}
+		SetTimeText();
 	}
 
-	// When this game object intersects a collider with 'is trigger' checked, 
+	// When this game object intersects a collider with 'is trigger' checked,
 	// store a reference to that collider in a variable named 'other'..
-	void OnTriggerEnter(Collider other) 
+	void OnTriggerEnter(Collider other)
 	{
 		// ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
 		//If the player hits an item
@@ -78,7 +90,6 @@ public class PlayerController : MonoBehaviour {
 			// Add one to the score variable 'count'
 			count = count + 1;
 
-			// Run the 'SetCountText()' function (see below)
 			SetCountText ();
 		}
 
@@ -98,10 +109,20 @@ public class PlayerController : MonoBehaviour {
 
 			rotatorScript.triggeredOn = true;
 
-
-
-			// Run the 'SetCountText()' function (see below)
 			SetCountText ();
+		}
+
+		//If the player hits a block
+		if (other.gameObject.CompareTag ("ramp"))
+		{
+			// Set some local float variables equal to the value of our Horizontal and Vertical Inputs
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
+
+			// Create a Vector3 variable, and assign X and Z to feature our horizontal and vertical float variables above
+			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			rb.AddForce(new Vector3(0,rampY,rampZ));
+			rb.AddForce (movement * speed);
 		}
 
 	}
@@ -110,13 +131,35 @@ public class PlayerController : MonoBehaviour {
 	void SetCountText()
 	{
 		// Update the text field of our 'countText' variable
-		countText.text = "Count: " + count.ToString ();
-		healthText.text = "Heath: " + health.ToString ();
-
+		countText.text = "Batteries: " + count.ToString ();
+		char barc = '\u2588';
+		string bar = barc.ToString();
+		string healthString = "";
+		int h = maxHealth - health;
+		for(int x = 0; x < h; x++)
+		{
+			healthString += " \n";
+		}
+		for(int x = 0; x < health; x++)
+		{
+			healthString += bar+"\n";
+		}
+		if(health == 1)
+			healthText.color = Color.red;
+		else if(health <= 3)
+			healthText.color = Color.yellow;
+		else
+			healthText.color = Color.green;
+		healthText.text = healthString;
 		// Check if our 'count' is equal to or exceeded 12
-		if (count >= 12) 
+		if (count >= 12)
 		{
 
 		}
 	}
+	void SetTimeText()
+	{ 
+		int timeLeft = Mathf.RoundToInt(maxTime - Time.time);
+		timeText.text = "Time: "+timeLeft;
+	}		
 }

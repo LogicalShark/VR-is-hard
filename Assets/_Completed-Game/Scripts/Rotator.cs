@@ -4,26 +4,25 @@ using System.Collections;
 public class Rotator : MonoBehaviour {
 	public GameObject player;
 	public float rotateX;
+	public float rotateY;
 	public float rotateZ;
 	public float rotationSpeed;
-	public float houseY;
-	public float specificY;
-	public int triggerDist;
+	public float offsetY;
+	public static int triggerDist = 100;
 	private double hasRotated;
 	public bool triggeredOn;
 	void Start()
 	{
 		triggeredOn = false;
 		hasRotated = 0;
-		transform.position = new Vector3(transform.position.x, specificY, transform.position.z);
+		transform.position = new Vector3(transform.position.x, offsetY, transform.position.z);
 	}
-	// Before rendering each frame..
 	void Update () 
 	{
-        float dist = Vector3.Distance(player.transform.position, transform.position);
+        float dist = transform.position.z - player.transform.position.z;
 		if((hasRotated<=90) && (dist<triggerDist))
 		{
-			transform.Rotate (new Vector3 (rotateX/rotationSpeed, houseY, rotateZ/rotationSpeed));
+			transform.Rotate (new Vector3 (rotateX/rotationSpeed, rotateY/rotationSpeed, rotateZ/rotationSpeed));
 			hasRotated += 90.0/rotationSpeed;
 		}
 	}
