@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 	public int gameLength;
 	public int sectionLength;
 	public int houseLength;
+	public int floorLength;
 	private GameObject[] randBlock = new GameObject[3];
 
 	private void Start () {
@@ -38,18 +39,21 @@ public class GameManager : MonoBehaviour {
 			houseRight.transform.position = new Vector3(width, -1, z);
 			GameObject houseLeft = Instantiate(house);
 			houseLeft.transform.position = new Vector3(-width, -1, z);
-			GameObject floor = Instantiate(ground);
-			floor.transform.position = new Vector3(0, 0, z);
 		}
-
 		for (int z = -10; z < gameLength-sectionLength; z += sectionLength) {
 			Random rnd = new Random();
 			int nextBlockPosZ = Random.Range (0, sectionLength-1);
 			int nextBlockPosX = Random.Range (-width, width);
 			int nextBlock = Random.Range(0, randBlock.Length);
 			GameObject block = Instantiate(randBlock [nextBlock]);
-			block.transform.position = new Vector3(nextBlockPosX, 3, z+nextBlockPosZ);
+			block.transform.position = new Vector3(nextBlockPosX, 2, z+nextBlockPosZ);
 		}
+		for (int z = -10; z < gameLength-floorLength; z += floorLength) 
+		{
+			GameObject floor = Instantiate(ground);
+			floor.transform.position = new Vector3(0, 0, z);
+		}
+
 	}
 
 	private void RestartGame () {}
