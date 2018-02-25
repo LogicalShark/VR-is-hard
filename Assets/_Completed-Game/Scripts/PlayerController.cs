@@ -9,12 +9,22 @@ public class PlayerController : MonoBehaviour {
 	
 	// Create public variables for player speed, and for the Text UI game objects
 	public float speed;
+
+	//for the points
 	public Text countText;
+	private int count;
+
+	//health count
+	public Text healthText;
+	private int health;
+
+	//speeds
 	public float baseSpeed;
 	public float maxSpeed;
+
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
-	private int count;
+
 
 	// At the start of the game..
 	void Start ()
@@ -24,6 +34,9 @@ public class PlayerController : MonoBehaviour {
 
 		// Set the count to zero 
 		count = 0;
+
+		// Set health to 2
+		health = 2;
 
 		// Run the SetCountText function to update the UI (see below)
 		SetCountText ();
@@ -55,9 +68,11 @@ public class PlayerController : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		// ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
-		if (other.gameObject.CompareTag ("Pick Up"))
+		//If the player hits an item
+		if (other.gameObject.CompareTag ("battery") || other.gameObject.CompareTag ("battery"))
 		{
 			// Make the other game object (the pick up) inactive, to make it disappear
+
 			other.gameObject.SetActive (false);
 
 			// Add one to the score variable 'count'
@@ -66,6 +81,29 @@ public class PlayerController : MonoBehaviour {
 			// Run the 'SetCountText()' function (see below)
 			SetCountText ();
 		}
+
+
+		//If the player hits a block
+		if (other.gameObject.CompareTag ("gear") || other.gameObject.CompareTag ("cat") || other.gameObject.CompareTag ("screw") || other.gameObject.CompareTag ("guard"))
+		{
+			// Make the other game object (the pick up) inactive, to make it disappear
+
+			//other.gameObject.SetActive (false);
+
+			Rotator rotatorScript = other.GetComponent<Rotator> ();
+			bool rotatorTrig = rotatorScript.triggeredOn;
+			if (!rotatorTrig) {
+				health = health - 1;
+			}
+
+			rotatorScript.triggeredOn = true;
+
+
+
+			// Run the 'SetCountText()' function (see below)
+			SetCountText ();
+		}
+
 	}
 
 	// Create a standalone function that can update the 'countText' UI and check if the required amount to win has been achieved
@@ -73,6 +111,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		// Update the text field of our 'countText' variable
 		countText.text = "Count: " + count.ToString ();
+		healthText.text = "Heath: " + health.ToString ();
 
 		// Check if our 'count' is equal to or exceeded 12
 		if (count >= 12) 

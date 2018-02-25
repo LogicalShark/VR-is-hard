@@ -7,11 +7,15 @@ public class Rotator : MonoBehaviour {
 	public float rotateZ;
 	public float rotationSpeed;
 	public float houseY;
+	public float specificY;
 	public int triggerDist;
 	private double hasRotated;
+	public bool triggeredOn;
 	void Start()
 	{
+		triggeredOn = false;
 		hasRotated = 0;
+		transform.position = new Vector3(transform.position.x, specificY, transform.position.z);
 	}
 	// Before rendering each frame..
 	void Update () 

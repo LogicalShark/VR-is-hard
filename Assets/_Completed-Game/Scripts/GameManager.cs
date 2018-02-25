@@ -13,12 +13,13 @@ public class GameManager : MonoBehaviour {
 	public GameObject battery;
 	public GameObject gear;
 	public int width;
+	//public int specificY;
 	public int gameLength;
 	public int sectionLength;
 	public int houseLength;
 	public int floorLength;
 	private GameObject[] randBlock = new GameObject[3];
-	private GameObject[] randItem = new GameObject[3];
+	private GameObject[] randItem = new GameObject[2];
 
 	private void Start () {
 		randBlock [0] = cat;
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour {
 		randBlock [2] = gear;
 		randItem [0] = screw;
 		randItem [1] = battery;
-		randItem [2] = roadblock;
+		//randItem [2] = roadblock;
 		BeginGame();
 	}
 
