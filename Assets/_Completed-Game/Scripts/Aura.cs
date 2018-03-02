@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Aura : MonoBehaviour {
 	public GameObject player;
-	public static int triggerDist = 100;
+	public static int triggerDist = 20;
 	public bool triggeredOn;
 
 	void Start()

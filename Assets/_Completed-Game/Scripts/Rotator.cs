@@ -8,7 +8,7 @@ public class Rotator : MonoBehaviour {
 	public float rotateZ;
 	public float rotationSpeed;
 	public float offsetY;
-	public static int triggerDist = 100;
+	public static int triggerDist = 50;
 	private double hasRotated;
 	public bool triggeredOn;
 	void Start()
