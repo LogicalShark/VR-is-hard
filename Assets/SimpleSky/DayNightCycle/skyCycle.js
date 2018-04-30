@@ -19,7 +19,7 @@ public var showGUI : boolean = false;
 public var latitudeAngle : float = 45.0;
 
 //The transform component of the empty that tilts the sun's roataion.(the SunTilt object, not the Sun object itself)
-public var sunTilt : Transform;
+// public var sunTilt : Transform;
 
 
 private var day : float;
@@ -32,9 +32,9 @@ private var sunOrbit : Transform;
 
 function Start () {
 	skyMat = GetComponent(Renderer).sharedMaterial;
-	sunOrbit = sunTilt.GetChild(0);
+	// sunOrbit = sunTilt.GetChild(0);
 
-	sunTilt.eulerAngles.x = Mathf.Clamp(latitudeAngle,0,90); //set the sun tilt
+	// sunTilt.eulerAngles.x = Mathf.Clamp(latitudeAngle,0,90); //set the sun tilt
 
 	if(secondsPerMinute==0){
 		Debug.LogError("Error! Can't have a time of zero, changed to 0.01 instead.");
@@ -48,8 +48,7 @@ function UpdateSky(){
 
 	smoothMin = smoothMin - (Mathf.Floor(smoothMin/1440)*1440); //clamp smoothMin between 0-1440
 	min = Mathf.Round(smoothMin);
-
-	sunOrbit.localEulerAngles.y = smoothMin/4;
+	// sunOrbit.localEulerAngles.y = smoothMin/4;
 	texOffset = Mathf.Cos((((smoothMin)/1440)*2)*Mathf.PI)*0.25+0.25;
 	skyMat.mainTextureOffset = Vector2(Mathf.Round((texOffset-(Mathf.Floor(texOffset/360)*360))*1000)/1000,0);
 }

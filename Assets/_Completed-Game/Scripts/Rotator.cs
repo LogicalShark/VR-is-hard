@@ -8,7 +8,7 @@ public class Rotator : MonoBehaviour {
 	public float rotateZ;
 	public float rotationSpeed;
 	public float offsetY;
-	public static int triggerDist = 50;
+	public static int triggerDist = 20;
 	private double hasRotated;
 	public bool triggeredOn;
 	void Start()
@@ -20,7 +20,7 @@ public class Rotator : MonoBehaviour {
 	void Update () 
 	{
         float dist = transform.position.z - player.transform.position.z;
-		if((hasRotated<=90) && (dist<triggerDist))
+		if((hasRotated <= 90) && (dist < triggerDist))
 		{
 			transform.Rotate (new Vector3 (rotateX/rotationSpeed, rotateY/rotationSpeed, rotateZ/rotationSpeed));
 			hasRotated += 90.0/rotationSpeed;

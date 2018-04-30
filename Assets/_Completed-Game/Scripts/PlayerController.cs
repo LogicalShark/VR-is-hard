@@ -2,14 +2,13 @@
 
 // Include the namespace required to use Unity UI
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
 	//time
 	public Text timeText;
-	public int maxTime;
 	//points
 	public Text countText;
 	private int count;
@@ -43,16 +42,23 @@ public class PlayerController : MonoBehaviour {
 		// Set health
 		health = maxHealth;
 
+		GameObject data = GameObject.Find("GameData");
+		if(data!=null)
+		{
+			GameDataScript scr = (GameDataScript) data.GetComponent("GameDataScript");
+			health = scr.hoverboardhealth;
+			maxHealth = scr.hoverboardhealth;
+			speed = scr.hoverboardacc;
+			baseSpeed = scr.hoverboardspeed;
+		}
 		// Run the SetCountText function to update the UI (see below)
 		SetCountText ();
-
 		// Set the text property of our Win Text UI to an empty string, making the 'You Win' (game over message) blank
 	}
 
 	// Each physics step..
 	void FixedUpdate ()
 	{
-
 		// Set some local float variables equal to the value of our Horizontal and Vertical Inputs
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
@@ -81,7 +87,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		// ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
 		//If the player hits an item
-		if (other.gameObject.CompareTag ("battery") || other.gameObject.CompareTag ("battery"))
+		if (other.gameObject.CompareTag ("coin"))
 		{
 			// Make the other game object (the pick up) inactive, to make it disappear
 
@@ -93,6 +99,15 @@ public class PlayerController : MonoBehaviour {
 			SetCountText ();
 		}
 
+		if (other.gameObject.CompareTag ("battery"))
+		{
+			// Make the other game object (the pick up) inactive, to make it disappear
+
+			other.gameObject.SetActive (false);
+
+			// Add one to the score variable 'count'
+			rb.AddForce(new Vector3(0,0,10*baseSpeed));
+		}
 
 		//If the player hits a block
 		if (other.gameObject.CompareTag ("gear") || other.gameObject.CompareTag ("cat") || other.gameObject.CompareTag ("screw") || other.gameObject.CompareTag ("guard"))
@@ -105,7 +120,12 @@ public class PlayerController : MonoBehaviour {
 			bool rotatorTrig = rotatorScript.triggeredOn;
 			if (!rotatorTrig) {
 				health = health - 1;
+				if(health < 0)
+				{
+			        SceneManager.LoadScene("MainMenu");
+				}
 			}
+			rb.AddForce(new Vector3(0,0,-20*baseSpeed));
 
 			rotatorScript.triggeredOn = true;
 
@@ -131,7 +151,7 @@ public class PlayerController : MonoBehaviour {
 	void SetCountText()
 	{
 		// Update the text field of our 'countText' variable
-		countText.text = "Batteries: " + count.ToString ();
+		countText.text = "Coins: " + count.ToString() + "000";
 		char barc = '\u2588';
 		string bar = barc.ToString();
 		string healthString = "";
@@ -159,7 +179,6 @@ public class PlayerController : MonoBehaviour {
 	}
 	void SetTimeText()
 	{ 
-		int timeLeft = Mathf.RoundToInt(maxTime - Time.time);
-		timeText.text = "Time: "+timeLeft;
-	}		
+		timeText.text = "Time: "+Mathf.RoundToInt(Time.time);
+	}
 }
