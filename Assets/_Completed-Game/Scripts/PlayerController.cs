@@ -28,6 +28,10 @@ public class PlayerController : MonoBehaviour {
     private float nextFire = 0.0F;
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
+	//sound
+	private AudioSource itemAudio;
+	public AudioClip metalSound;
+	public AudioClip catSound;
 
 
 	// At the start of the game..
@@ -130,6 +134,8 @@ public class PlayerController : MonoBehaviour {
 			rotatorScript.triggeredOn = true;
 
 			SetCountText ();
+
+			playSound ("gear");
 		}
 
 		//If the player hits a block
@@ -180,5 +186,14 @@ public class PlayerController : MonoBehaviour {
 	void SetTimeText()
 	{ 
 		timeText.text = "Time: "+Mathf.RoundToInt(Time.time);
+	}
+
+	void playSound(string soundItem)
+	{
+		itemAudio = GetComponent <AudioSource> ();
+		if(soundItem == "gear") itemAudio.clip = metalSound;
+		if(soundItem == "cat") itemAudio.clip = catSound;
+		itemAudio.Play ();
+
 	}
 }

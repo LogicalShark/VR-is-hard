@@ -15,7 +15,10 @@ public class GameManager : MonoBehaviour {
 	public GameObject screw;
 	public GameObject battery;
 	public GameObject coin;
+	public GameObject toolbox;
+	public GameObject gearitem;
 	public GameObject gear;
+	public GameObject starburst;
 	public GameObject lwall;
 	public GameObject rwall;
 	public GameObject ramp;
@@ -26,7 +29,7 @@ public class GameManager : MonoBehaviour {
 	public int houseLength;
 	public int floorLength;
 	private GameObject[] blocks = new GameObject[4];
-	private GameObject[] items = new GameObject[3];
+	private GameObject[] items = new GameObject[5];
 
 	private void Start () {
 		blocks [0] = cat;
@@ -36,6 +39,8 @@ public class GameManager : MonoBehaviour {
 		items [0] = battery;
 		items [1] = ramp;
 		items [2] = coin;
+		items [3] = toolbox;
+		items [4] = gearitem;
 		BeginGame();
 	}
 
@@ -78,8 +83,8 @@ public class GameManager : MonoBehaviour {
 				houseRight = Instantiate(house3);
 				houseLeft = Instantiate(house3);
 			}
-			houseRight.transform.position = new Vector3(width+nextHousePosX, -.5f, z+nextHousePosZ);
-			houseLeft.transform.position = new Vector3(-width+nextHousePosX2, -.5f, z+nextHousePosZ2);
+			houseRight.transform.position = new Vector3(width+nextHousePosX, 1.1f, z+nextHousePosZ);
+			houseLeft.transform.position = new Vector3(-width+nextHousePosX2, 1.1f, z+nextHousePosZ2);
 		}
 
 		//Creating the floor/walls
@@ -110,6 +115,7 @@ public class GameManager : MonoBehaviour {
 			float nextItemPosX = Random.Range (-width+2f, width-2f);
 			int nextItem = Random.Range(0, items.Length);
 			//Ramps
+		
 			if (nextItem == 1)
 			{
 				GameObject newItem = Instantiate(items [nextItem]);
@@ -118,7 +124,7 @@ public class GameManager : MonoBehaviour {
 				// newCoin.transform.position = new Vector3(nextItemPosX, 2.0f, z+nextItemPosZ+1f);
 			}
 			//Multiple coins
-			if (nextItem == 2)
+			else if (nextItem == 2)
 			{
 				for(int c = 0; c < Random.Range(3,6); c++)
 				{
@@ -129,7 +135,10 @@ public class GameManager : MonoBehaviour {
 			else
 			{
 				GameObject newItem = Instantiate(items [nextItem]);
-				newItem.transform.position = new Vector3(nextItemPosX, 2f, z+nextItemPosZ);
+				newItem.transform.position = new Vector3(nextItemPosX, .3f, z+nextItemPosZ);
+				GameObject starburst_item = Instantiate(starburst);
+				starburst_item.transform.position = new Vector3(nextItemPosX, .3f, z+nextItemPosZ+.1f);
+
 			}
 		}
 

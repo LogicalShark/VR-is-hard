@@ -8,9 +8,11 @@ public class Walking : MonoBehaviour {
 	public float transAmountx = 2;
 	private int direction = 0;
 	private int direction2 = 0;
+	private SpriteRenderer sr; 
 	public float width;
 	void Start()
 	{
+		sr = gameObject.GetComponent<SpriteRenderer>();
 		direction = Random.Range(0,2);
 	}
 	void Update()
@@ -19,16 +21,21 @@ public class Walking : MonoBehaviour {
 		{
 			direction = 0;
 			direction2 += 1;
+			sr.flipX = !sr.flipX;
 		}
 		if(transform.position.x <= -width)
 		{
 			direction = 1;
 			direction2 += 1;
+			sr.flipX = !sr.flipX;
+
 		}			
 		if(direction == 1)
 		{
-			if(direction2%4==0 || direction2%4==1)
-				transform.Translate(new Vector3 (transAmountx, transAmounty, -Random.Range(-2f, 2f)*transAmountz) * Time.deltaTime);
+			if (direction2 % 4 == 0 || direction2 % 4 == 1) {
+				transform.Translate (new Vector3 (transAmountx, transAmounty, -Random.Range (-2f, 2f) * transAmountz) * Time.deltaTime);
+				//sr.flipX = !sr.flipX;
+			}
 			else
 				transform.Translate(new Vector3 (transAmountx, -transAmounty, -Random.Range(-2f, 2f)*transAmountz) * Time.deltaTime);			
 		}
