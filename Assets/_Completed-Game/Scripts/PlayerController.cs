@@ -4,6 +4,8 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.IO.Ports;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
@@ -28,6 +30,8 @@ public class PlayerController : MonoBehaviour {
     private float nextFire = 0.0F;
 	// Create private references to the rigidbody component on the player, and the count of pick up objects picked up so far
 	private Rigidbody rb;
+    SerialPort stream = new SerialPort("/dev/cu.usbmodem22", 9600); 
+
 
 
 	// At the start of the game..
@@ -53,32 +57,47 @@ public class PlayerController : MonoBehaviour {
 		}
 		// Run the SetCountText function to update the UI (see below)
 		SetCountText ();
+		stream.Open();
+		StartCoroutine (moveBoard ());
+		Debug.Log(420);
 		// Set the text property of our Win Text UI to an empty string, making the 'You Win' (game over message) blank
 	}
 
 	// Each physics step..
-	void FixedUpdate ()
+	IEnumerator moveBoard ()
 	{
-		// Set some local float variables equal to the value of our Horizontal and Vertical Inputs
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
+		while (true) {
+			string value = stream.ReadLine();
+			Debug.Log('k');
+			Debug.Log(value);
+			string[] vec3 = value.Split(',');
+			Debug.Log (vec3 [0]);
+			Debug.Log (vec3 [1]);
+			Debug.Log (vec3 [2]);
 
-		// Create a Vector3 variable, and assign X and Z to feature our horizontal and vertical float variables above
-		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			// Set some local float variables equal to the value of our Horizontal and Vertical Inputs
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
 
-		if(Input.GetButtonDown("Fire1") && Time.time > nextFire)
-		{
-            nextFire = Time.time + fireRate;
-			rb.AddForce(new Vector3(0,jumpY,0));
+			// Create a Vector3 variable, and assign X and Z to feature our horizontal and vertical float variables above
+			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+
+			if(Input.GetButtonDown("Fire1") && Time.time > nextFire)
+			{
+				nextFire = Time.time + fireRate;
+				rb.AddForce(new Vector3(0,jumpY,0));
+			}
+			// Add a physical force to our Player rigidbody using our 'movement' Vector3 above,
+			// multiplying it by 'speed' - our public player speed that appears in the inspector
+			if((rb.velocity.magnitude)<=maxSpeed)
+			{
+				rb.AddForce(new Vector3(0,0,baseSpeed));
+				rb.AddForce (movement * speed);
+			}
+			SetTimeText();
+			yield return new WaitForSeconds(2); //call 5 times a second
 		}
-		// Add a physical force to our Player rigidbody using our 'movement' Vector3 above,
-		// multiplying it by 'speed' - our public player speed that appears in the inspector
-		if((rb.velocity.magnitude)<=maxSpeed)
-		{
-			rb.AddForce(new Vector3(0,0,baseSpeed));
-			rb.AddForce (movement * speed);
-		}
-		SetTimeText();
+
 	}
 
 	// When this game object intersects a collider with 'is trigger' checked,
